@@ -71,6 +71,23 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	    }
 	 
 	});
+
+	$app->get('/pushmessage', function($req, $res) use ($bot){
+		$userid = '';
+		$textMessageBuilder = new TextMessageBuilder('Halo, ini test doang');
+		$result = $bot->pushMessage($userid, $textMessageBuilder);
+
+		return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+	});
+
+	$app->get('/profile', function($req, $res) use ($bot)
+	{
+	    // get user profile
+	    $userId = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+	    $result = $bot->getProfile($userId);
+	   
+	    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+	});
  
 $app->run();
 
