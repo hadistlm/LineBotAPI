@@ -61,12 +61,8 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		        {
 		            if($event['message']['type'] == 'text')
 		            {
-		                // send same message as reply to user
+		                // Send balik
 		                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-		 
-		                // or we can use replyMessage() instead to send reply message
-		                // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
-		                // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
 		 
 		                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 		            }
