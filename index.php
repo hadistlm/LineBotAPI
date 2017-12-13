@@ -55,19 +55,23 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	 
 	    $data = json_decode($body, true);
 	    if (is_array($data['events'])) {
-	    	foreach ($data['events'] as $value) {
-	    		if ($value->type == 'message') {
-	    			if ($value->message->type == 'text') {
-					$result = $bot->replyText($value['replyToken'], $value['message']['text']);
- 
-                // or we can use replyMessage() instead to send reply message
-                // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
-                // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
- 
-                	return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-	    			}
-	    		}
-	    	}
+	    	foreach ($data['events'] as $event)
+		    {
+		        if ($event['type'] == 'message')
+		        {
+		            if($event['message']['type'] == 'text')
+		            {
+		                // send same message as reply to user
+		                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+		 
+		                // or we can use replyMessage() instead to send reply message
+		                // $textMessageBuilder = new TextMessageBuilder($event['message']['text']);
+		                // $result = $bot->replyMessage($event['replyToken'], $textMessageBuilder);
+		 
+		                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+		            }
+		        }
+		    }
 	    }
 	 
 	});
