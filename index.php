@@ -65,7 +65,15 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 		 
 		                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-		            }
+		            }else if( ($event['message']['type'] == 'image' || $event['message']['type'] == 'video') or
+						    ($event['message']['type'] == 'audio' || $event['message']['type'] == 'file')){
+					    $basePath  = $request->getUri()->getBaseUrl();
+					    $contentURL  = $basePath."/content/".$event['message']['id'];
+					    $contentType = ucfirst($event['message']['type']);
+					    $result = $bot->replyText($event['replyToken'], $contentType. " yang Anda kirim bisa diakses dari link:\n " . $contentURL);
+					 
+					    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+					}
 		        }
 		    }
 	    }
@@ -87,6 +95,17 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	    $result = $bot->getProfile($userId);
 	   
 	    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+	});
+
+	$app->get('/content/{messageId}', function($req, $res) use ($bot){
+		$route      = $req->getAttribute('route');
+	    $messageId = $route->getArgument('messageId');
+	    $result = $bot->getMessageContent($messageId);
+	 
+	    // set response
+	    $res->write($result->getRawBody());
+	 
+	    return $res->withHeader('Content-Type', $result->getHeader('Content-Type'));
 	});
  
 $app->run();
