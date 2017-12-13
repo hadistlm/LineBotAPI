@@ -62,7 +62,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		            if($event['message']['type'] == 'text')
 		            {
 		                // Send balik
-		                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+		                $result = $bot->replyText($event['replyToken'], $event['source']['userId'].$event['message']['text']);
 		 
 		                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 		            }else if( ($event['message']['type'] == 'image' || $event['message']['type'] == 'video') or
