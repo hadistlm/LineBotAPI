@@ -63,7 +63,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		            {
 		                // Send balik
 		                $user = $bot->getProfile($event['source']['userId']);
-		                $result = $bot->replyText($event['replyToken'], $bot->getProfile($event['source']['userId']));
+		                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 		 
 		                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 		            }else if( ($event['message']['type'] == 'image' || $event['message']['type'] == 'video') or
