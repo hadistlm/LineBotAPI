@@ -1,5 +1,5 @@
 <?php
-require__DIR___.'/vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 use \LINE\LINEBot;
 use \LINE\LINEBot\HTTPClient\CurlHTTPClient;
@@ -27,7 +27,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-	  echo "Welcome at Slim Framework";
+	  echo "Welcome  at Slim Framework";
 	});
  
 	// buat route untuk webhook
