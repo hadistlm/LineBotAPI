@@ -91,7 +91,13 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 							$json_data 	= file_get_contents($url);
 							$url 	  	= json_decode($json_data,true);
 
-						    $result = $bot->replyText($event['replyToken'], $url['response']);
+							if ((strpos($url['response'], 'simi') !== false)) {
+								$fetch = str_replace("simi", "AusBOT", $url['response']);	
+							}else {
+								$fetch = $url['response'];
+							}
+
+						    $result = $bot->replyText($event['replyToken'], $fetch);
 						    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						}
 		        	}
