@@ -92,7 +92,44 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 							$url 	  	= json_decode($json_data,true);
 							$diterima 	= $url['response'];
 
-						    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
+							$userId     = $event['source']['userId'];
+						    $getprofile = $bot->getProfile($userId);
+						    $profile    = $getprofile->getJSONDecodedBody();
+
+							if($url['result'] == 404){
+								$balas = array(
+									'UserID' => $event['source']['userId'],	
+						            'replyToken' => $event['replyToken'],													
+									'messages' => [['type' => 'text', 'text' => 'Mohon Gunakan Bahasa Indonesia Yang Benar :D.']]
+								);
+							} else if($url['result'] != 100) {
+								$balas = array(
+									'UserID' => $event['source']['userId'],
+						            'replyToken' => $event['replyToken'],														
+									'messages' => array(
+										array(
+											'type' => 'text',					
+											'text' => 'Maaf '.$profile['displayName'].' Server Kami Sedang Sibuk Sekarang.'
+										)
+									)
+								);
+										
+							}
+							else{
+								$balas = array(
+									'UserID' => $event['source']['userId'],
+						            'replyToken' => $event['replyToken'],														
+									'messages' => array(
+											array(
+												'type' => 'text',					
+												'text' => ''.$diterima.''
+										)
+									)
+								);
+												
+							}
+
+						    $result = $bot->replyMessage($balas);
 						    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						}
 		        	}
