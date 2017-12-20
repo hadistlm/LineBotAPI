@@ -90,9 +90,8 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 							$url 		= 'http://sandbox.api.simsimi.com/request.p?key='.$key.'&lc=id&ft=1.0&text='.$pesan;
 							$json_data 	= file_get_contents($url);
 							$url 	  	= json_decode($json_data,true);
-							$diterima 	= $url['response'];
 
-						    $result = $bot->replyText($event['replyToken'], $url['result']);
+						    $result = $bot->replyText($event['replyToken'], $url['response']);
 						    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						}
 		        	}
