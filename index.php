@@ -27,7 +27,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-	  echo "Welcome  at Slim Framework";
+	  echo "Testing API Line Feat SimSimi";
 	});
  
 	// buat route untuk webhook
@@ -76,7 +76,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 						    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						}	
 		        	} else {
-		        		if($event['source']['userId']){
+		        		if(strpos($event['message']['text'], 'Halo') !== false && !empty($event['source']['userId'])){
 						    $userId     = $event['source']['userId'];
 						    $getprofile = $bot->getProfile($userId);
 						    $profile    = $getprofile->getJSONDecodedBody();
