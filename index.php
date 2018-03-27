@@ -27,7 +27,10 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-		$basePath = $req->getUri()->getBaseUrl();
+		$basePath = $req->getUri();
+
+		var_dump($basePath);
+
 		$filename = $basePath."/database/database.txt";
 		$handle   = fopen($filename, "r") or die("Unable to open file!");
 		echo fgets($handle);
@@ -100,7 +103,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 						    $getprofile = $bot->getProfile($userId);
 						    $profile    = $getprofile->getJSONDecodedBody();
 						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
-						    $basePath   = $request->getUri()->getRootUri();
+						    $basePath   = $request->getUri()->getBaseUrl();
 
 							//if ((strpos($url['response'], 'simi') !== false)) {
 							//	$fetch = str_replace("simi", "AusBOT", $url['response']);	
@@ -122,13 +125,12 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 								endforeach;
 							}else {		
 								$storeData = fopen($basePath."/database/database.txt", "a");
-								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name.'\n';
+								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name."\n";
 								fwrite($storeData, $textStore);
 								fclose($storeData);
 
 								$sending = $textStore."\n";
 								$sending .= $basePath."\n";
-								$sending .= $storeData."\n";
 							}
 
 						    $result = $bot->replyText($event['replyToken'], $sending);
