@@ -56,12 +56,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	    $data = json_decode($body, true);
 	    if (is_array($data['events'])) {
 	    	foreach ($data['events'] as $event)
-		    {	
-		    	$user = $bot->getProfile($event['source']['userId']);
-			    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-			    
-		    	return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-		    	/*
+		    {
 		        if ($event['type'] == 'message')
 		        {
 		        	if ($event['source']['type'] == "user") {
@@ -90,24 +85,47 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 					    	$result = $bot->replyMessage($event['replyToken'], $greetings);
 					    	return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						} else {
-							$pesan 		= str_replace(" ", "%20", $event['message']['text']);
-							$key 		= '2f8549cb-49b3-4089-9339-eecaf2fe92e6';
-							$url 		= 'http://sandbox.api.simsimi.com/request.p?key='.$key.'&lc=id&ft=1.0&text='.$pesan;
-							$json_data 	= file_get_contents($url);
-							$url 	  	= json_decode($json_data,true);
+							//$pesan 		= str_replace(" ", "%20", $event['message']['text']);
+							//$key 		= '2f8549cb-49b3-4089-9339-eecaf2fe92e6';
+							//$url 		= 'http://sandbox.api.simsimi.com/request.p?key='.$key.'&lc=id&ft=1.0&text='.$pesan;
+							//$json_data 	= file_get_contents($url);
+							//$url 	  	= json_decode($json_data,true);
 
-							if ((strpos($url['response'], 'simi') !== false)) {
-								$fetch = str_replace("simi", "AusBOT", $url['response']);	
-							}else {
-								$fetch = $url['response'];
+							$userId     = $event['source']['userId'];
+						    $getprofile = $bot->getProfile($userId);
+						    $profile    = $getprofile->getJSONDecodedBody();
+						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : $event['source']['userId'];
+
+							//if ((strpos($url['response'], 'simi') !== false)) {
+							//	$fetch = str_replace("simi", "AusBOT", $url['response']);	
+							//}else {
+							//	$fetch = $url['response'];
+							//}
+
+							if (strpos($event['message']['text'], "!l") !== FALSE) {
+								$getuser   = explode(" ", $event['message']['text']);
+								$storeData = fopen("/database/database.txt", "r");
+								$data 	   = fread($storeData,filesize("/database/database.txt"));
+								fclose($storeData);
+								$explo = explode("\n", $data);
+
+								foreach ($explo as $value):
+									if(strpos($value, $getuser[1]) !== FALSE){
+										$sending .= $value."\n";
+									}
+								endforeach;
+							}else {		
+								$storeData = fopen("/database/database.txt", "w");
+								$textStore = date("Y-m-d H:i").' : '.$event['message']['text'].' : '.$name.'\n';
+								fwrite($storeData, $textStore);
+								fclose($storeData);
 							}
 
-						    $result = $bot->replyText($event['replyToken'], $fetch);
+						    $result = $bot->replyText($event['replyToken'], $sending);
 						    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 						}
 		        	}
 		        }
-		        */
 		    }
 	    }
 	 
