@@ -31,10 +31,11 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		$filename = $basePath."/database/database.txt";
 		$handle   = fopen($filename, "r");
 		$contents = fread($handle, filesize($filename));
-		fclose($handle);
-
+		
 		var_dump($basePath);
 		var_dump($contents);
+
+		fclose($handle);
 	 	//echo $sending;
 	});
  
