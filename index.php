@@ -99,7 +99,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 							$userId     = $event['source']['userId'];
 						    $getprofile = $bot->getProfile($userId);
 						    $profile    = $getprofile->getJSONDecodedBody();
-						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : $event['source']['userId'];
+						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
 						    $basePath   = $request->getUri()->getBaseUrl();
 
 							//if ((strpos($url['response'], 'simi') !== false)) {
@@ -121,12 +121,14 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 									}
 								endforeach;
 							}else {		
-								$storeData = fopen($basePath."/database/database.txt", "w");
+								$storeData = fopen($basePath."/database/database.txt", "a");
 								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name.'\n';
 								fwrite($storeData, $textStore);
 								fclose($storeData);
 
-								$sending = $textStore;
+								$sending = $textStore."\n";
+								$sending .= $basePath."\n";
+								$sending .= $storeData."\n";
 							}
 
 						    $result = $bot->replyText($event['replyToken'], $sending);
