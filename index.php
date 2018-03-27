@@ -27,17 +27,11 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-		$getuser   = explode(" ", $event['message']['text']);
-		$storeData = fopen($basePath."/database/database.txt", "r");
-		$data 	   = fread($storeData,filesize("/database/database.txt"));
-		fclose($storeData);
-		$explo = explode("\n", $data);
+		$basePath   = $req->getUri()->getBaseUrl();
+		$section = file_get_contents($basePath."/database/database.txt", NULL, NULL, 20, 14);
+		var_dump($section);
 
-		foreach ($explo as $value):
-				$sending .= $value."\n";
-		endforeach;
-
-	  echo $sending;
+	 	//echo $sending;
 	});
  
 	// buat route untuk webhook
