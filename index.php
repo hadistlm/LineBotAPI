@@ -29,11 +29,15 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	{
 		$basePath = $req->getUri()->getBaseUrl();
 		$filename = $basePath."/database/database.txt";
+
+		$storeData = fopen($filename, "a");
+		$textStore = "2018-03-27 07:36:22 : test : Unidentified\n";
+		fwrite($storeData, $textStore);
+		fclose($storeData);
+
 		$handle   = fopen($filename, "r") or die("Unable to open file!");
 		echo fgets($handle);
 		fclose($myfile);
-
-		var_dump($filename);
 	});
  
 	// buat route untuk webhook
