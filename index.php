@@ -27,7 +27,17 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-	  echo "Testing API Line Feat SimSimi";
+		$getuser   = explode(" ", $event['message']['text']);
+		$storeData = fopen($basePath."/database/database.txt", "r");
+		$data 	   = fread($storeData,filesize("/database/database.txt"));
+		fclose($storeData);
+		$explo = explode("\n", $data);
+
+		foreach ($explo as $value):
+				$sending .= $value."\n";
+		endforeach;
+
+	  echo $sending;
 	});
  
 	// buat route untuk webhook
@@ -95,6 +105,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 						    $getprofile = $bot->getProfile($userId);
 						    $profile    = $getprofile->getJSONDecodedBody();
 						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : $event['source']['userId'];
+						    $basePath   = $request->getUri()->getBaseUrl();
 
 							//if ((strpos($url['response'], 'simi') !== false)) {
 							//	$fetch = str_replace("simi", "AusBOT", $url['response']);	
@@ -104,7 +115,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 
 							if (strpos($event['message']['text'], "!l") !== FALSE) {
 								$getuser   = explode(" ", $event['message']['text']);
-								$storeData = fopen("/database/database.txt", "r");
+								$storeData = fopen($basePath."/database/database.txt", "r");
 								$data 	   = fread($storeData,filesize("/database/database.txt"));
 								fclose($storeData);
 								$explo = explode("\n", $data);
@@ -115,7 +126,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 									}
 								endforeach;
 							}else {		
-								$storeData = fopen("/database/database.txt", "w");
+								$storeData = fopen($basePath."/database/database.txt", "w");
 								$textStore = date("Y-m-d H:i").' : '.$event['message']['text'].' : '.$name.'\n';
 								fwrite($storeData, $textStore);
 								fclose($storeData);
