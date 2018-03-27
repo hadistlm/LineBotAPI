@@ -30,13 +30,14 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		$basePath = $req->getUri()->getBaseUrl();
 		$filename = $basePath."/database/database.txt";
 
-		$file = fopen($filename, "a+") or die("Unable to open file!");
-		echo fwrite($file,"Hello World. Testing!");
+		$file = fopen($filename, "r") or die("Unable to open file!");
+		//echo fwrite($file,"Hello World. Testing!");
+		echo fgets($file);
 		fclose($file);
 		
 		//$handle   = fopen($filename, "r") or die("Unable to open file!");
 		//echo fgets($handle);
-		//fclose($myfile);
+		//fclose($handle);
 	});
  
 	// buat route untuk webhook
