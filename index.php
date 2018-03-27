@@ -122,12 +122,12 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 									}
 								endforeach;
 							}else {		
-								$storeData = fopen("http://".$basePath."/database/database.txt", "a");
+								$storeData = fopen($basePath."/database/database.txt", "a");
 								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name."\n";
-								fwrite($storeData, $textStore);
+								$status = fwrite($storeData, $textStore);
 								fclose($storeData);
 
-								$sending = "http://".$basePath."/database/database.txt";
+								$sending = $status;
 							}
 
 						    $result = $bot->replyText($event['replyToken'], $sending);
