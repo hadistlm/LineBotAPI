@@ -30,7 +30,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		$basePath = $req->getUri()->getBaseUrl();
 		$filename = $basePath."/database/database.txt";
 		$handle   = fopen($filename, "r") or die("Unable to open file!");
-		echo fgets($myfile);
+		echo fgets($handle);
 		fclose($myfile);
 	 	//echo $sending;
 	});
@@ -122,11 +122,11 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 								endforeach;
 							}else {		
 								$storeData = fopen($basePath."/database/database.txt", "w");
-								$textStore = date("Y-m-d H:i").' : '.$event['message']['text'].' : '.$name.'\n';
+								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name.'\n';
 								fwrite($storeData, $textStore);
 								fclose($storeData);
 
-								$sending = "Data Recorded";
+								$sending = $textStore;
 							}
 
 						    $result = $bot->replyText($event['replyToken'], $sending);
