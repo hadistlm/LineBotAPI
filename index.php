@@ -30,10 +30,9 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		$basePath = $req->getUri()->getBaseUrl();
 		$filename = $basePath."/database/database.txt";
 
-		$storeData = fopen($filename, "a");
-		$textStore = "2018-03-27 07:36:22 : test : Unidentified\n";
-		fwrite($storeData, $textStore);
-		fclose($storeData);
+		$file = fopen($filename,"a");
+		echo fwrite($file,"Hello World. Testing!");
+		fclose($file);
 
 		$handle   = fopen($filename, "r") or die("Unable to open file!");
 		echo fgets($handle);
