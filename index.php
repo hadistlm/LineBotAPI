@@ -111,7 +111,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 
 							if (strpos($event['message']['text'], "!l") !== FALSE) {
 								$getuser   = explode(" ", $event['message']['text']);
-								$storeData = fopen($basePath."/database/database.txt", "r");
+								$storeData = fopen("http://".$basePath."/database/database.txt", "r");
 								$data 	   = fread($storeData,filesize("/database/database.txt"));
 								fclose($storeData);
 								$explo = explode("\n", $data);
@@ -122,12 +122,12 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 									}
 								endforeach;
 							}else {		
-								$storeData = fopen($basePath."/database/database.txt", "a");
+								$storeData = fopen("http://".$basePath."/database/database.txt", "a");
 								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name."\n";
 								fwrite($storeData, $textStore);
 								fclose($storeData);
 
-								$sending = $basePath;
+								$sending = "http://".$basePath."/database/database.txt";
 							}
 
 						    $result = $bot->replyText($event['replyToken'], $sending);
