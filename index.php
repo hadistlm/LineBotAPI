@@ -100,7 +100,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 						    $getprofile = $bot->getProfile($userId);
 						    $profile    = $getprofile->getJSONDecodedBody();
 						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
-						    $basePath   = $request->getUri()->getBaseUrl();
+						    $basePath   = $request->getUri()->getRootUri();
 
 							//if ((strpos($url['response'], 'simi') !== false)) {
 							//	$fetch = str_replace("simi", "AusBOT", $url['response']);	
