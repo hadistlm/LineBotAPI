@@ -56,7 +56,10 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	    $data = json_decode($body, true);
 	    if (is_array($data['events'])) {
 	    	foreach ($data['events'] as $event)
-		    {
+		    {	
+		    	$result = json_encode($event);
+		    	return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+		    	/*
 		        if ($event['type'] == 'message')
 		        {
 		        	if ($event['source']['type'] == "user") {
@@ -102,6 +105,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 						}
 		        	}
 		        }
+		        */
 		    }
 	    }
 	 
