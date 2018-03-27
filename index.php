@@ -33,7 +33,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 		echo fgets($handle);
 		fclose($myfile);
 
-		var_dump($basePath);
+		var_dump($filename);
 	});
  
 	// buat route untuk webhook
