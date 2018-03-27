@@ -27,9 +27,10 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	// buat route untuk url homepage
 	$app->get('/', function($req, $res)
 	{
-		$basePath   = $req->getUri()->getBaseUrl();
-		$section = file_get_contents($basePath."/database/database.txt", NULL, NULL, 20, 14);
-		var_dump($section);
+		$filename = "/usr/local/something.txt";
+		$handle   = fopen($filename, "r");
+		$contents = fread($handle, filesize($filename));
+		fclose($handle);
 
 	 	//echo $sending;
 	});
