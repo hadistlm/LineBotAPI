@@ -28,17 +28,12 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 	$app->get('/', function($req, $res)
 	{
 		$basePath = $req->getUri()->getBaseUrl();
-		$filename = $basePath."/database/database.txt";
+		$filename = $basePath."/tmp/database.txt";
 
-		chmod($filename, 0777);
-		$file = fopen($filename, "a") or die("Unable to open file!");
+		$file = fopen($filename, "a+") or die("Unable to open file!");
 		echo fwrite($file,"Hello World. Testing!");
 		//echo fgets($file);
 		fclose($file);
-		
-		//$handle   = fopen($filename, "r") or die("Unable to open file!");
-		//echo fgets($handle);
-		//fclose($handle);
 	});
  
 	// buat route untuk webhook
@@ -76,7 +71,7 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 			                $user = $bot->getProfile($event['source']['userId']);
 			                $result = $bot->replyText($event['replyToken'], $event['message']['text']);
 			 
-			                return $response->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+			                return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
 			            }else if( ($event['message']['type'] == 'image' || $event['message']['type'] == 'video') or
 							    ($event['message']['type'] == 'audio' || $event['message']['type'] == 'file')){
 						    $basePath  = $request->getUri()->getBaseUrl();
@@ -102,17 +97,18 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 							//$json_data 	= file_get_contents($url);
 							//$url 	  	= json_decode($json_data,true);
 
-							$userId     = $event['source']['userId'];
-						    $getprofile = $bot->getProfile($userId);
-						    $profile    = $getprofile->getJSONDecodedBody();
-						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
-						    $basePath   = $request->getUri()->getHost();
-
 							//if ((strpos($url['response'], 'simi') !== false)) {
 							//	$fetch = str_replace("simi", "AusBOT", $url['response']);	
 							//}else {
 							//	$fetch = $url['response'];
 							//}
+
+							$groupId 	= $event['source']['groupId'];
+							$userId     = $event['source']['userId'];
+						    $getprofile = $bot->getProfile($userId);
+						    $profile    = $getprofile->getJSONDecodedBody();
+						    $name 		= !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
+						    $basePath   = $request->getUri()->getHost();
 
 							if (strpos($event['message']['text'], "!l") !== FALSE) {
 								$getuser   = explode(" ", $event['message']['text']);
@@ -121,14 +117,19 @@ use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 								fclose($storeData);
 								$explo = explode("\n", $data);
 
-								foreach ($explo as $value):
-									if(strpos($value, $getuser[1]) !== FALSE){
-										$sending .= $value."\n";
+								if (empty($getuser[1])) :
+									$sending = "Nama User Kosong.";
+								else:
+									foreach ($explo as $value){}
+										if(strpos($value, strtolower($getuser[1]) !== FALSE):
+											$sending .= $value."\n";
+										endif;
 									}
-								endforeach;
+								endif;
+								
 							}else {		
-								$storeData = fopen($basePath."/database/database.txt", "a");
-								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.$name."\n";
+								$storeData = fopen($basePath."/tmp/database.txt", "a");
+								$textStore = date("Y-m-d h:i:s").' : '.$event['message']['text'].' : '.strtolower($name).' : '.$groupId."\n";
 								$status = fwrite($storeData, $textStore);
 								fclose($storeData);
 
