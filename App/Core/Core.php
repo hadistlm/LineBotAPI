@@ -108,7 +108,7 @@ class Core
     	new \BotCore\Controllers\Homepage($app);
     	new \BotCore\Controllers\Content($app, $bot);
     	new \BotCore\Controllers\Profile($app, $bot);
-    	new \BotCore\Controllers\Webhook($app, $bot);
+    	new \BotCore\Controllers\Webhook($app, $bot, $this->pass_signature);
     	new \BotCore\Controllers\PushMessage($app, $bot);
     }
 

@@ -12,36 +12,38 @@ class Webhook extends Core
     /**
      * summary
      */
-    public function __construct($app, $bot)
+    public function __construct($app, $bot, $pass_signature)
     {
-    	$this->webhook($app, $bot);
+    	$this->webhook($app, $bot, $pass_signature);
     }
 
-    public function webhook($app, $bot)
+    public function webhook($app, $bot, $pass_signature)
     {
-    	// get request body and line signature header
-        $body        = file_get_contents('php://input');
-        $signature = isset($_SERVER['HTTP_X_LINE_SIGNATURE']) ? $_SERVER['HTTP_X_LINE_SIGNATURE'] : '';
-     
-        // log body and signature
-        file_put_contents('php://stderr', 'Body: '.$body);
-     
-        if($this->pass_signature === false)
-        {
-            // is LINE_SIGNATURE exists in request header?
-            if(empty($signature)){
-                return $response->withStatus(400, 'Signature not set');
+        $app->post('/webhook', function ($request, $response) use ($bot, $pass_signature){
+            // get request body and line signature header
+            $body        = file_get_contents('php://input');
+            $signature = isset($_SERVER['HTTP_X_LINE_SIGNATURE']) ? $_SERVER['HTTP_X_LINE_SIGNATURE'] : '';
+         
+            // log body and signature
+            file_put_contents('php://stderr', 'Body: '.$body);
+         
+            if($this->pass_signature === false)
+            {
+                // is LINE_SIGNATURE exists in request header?
+                if(empty($signature)){
+                    return $response->withStatus(400, 'Signature not set');
+                }
+         
+                // is this request comes from LINE?
+                if(! SignatureValidator::validateSignature($body, $channel_secret, $signature)){
+                    return $response->withStatus(400, 'Invalid signature');
+                }
             }
-     
-            // is this request comes from LINE?
-            if(! SignatureValidator::validateSignature($body, $channel_secret, $signature)){
-                return $response->withStatus(400, 'Invalid signature');
-            }
-        }
-     
-        $data = json_decode($body, true);
+         
+            $data = json_decode($body, true);
 
-        return $this->events($data);
+            return $this->events($data);
+        });
     }
 
     public function events($data)
