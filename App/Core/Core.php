@@ -38,12 +38,23 @@ class Core
     private $channel_secret = "#your_channel_secret";
 
     /**
-     * Inject Channel Secret token from messaging API
+     * Inject simsimi key
      *
      * @param your_unique_secret
      *
      */
     private $simsimi_key = "#your_simsimi_api_key";
+
+    /**
+     * Inject simsimi language
+     *
+     * @param your language desire
+     * 
+     * @default "id"
+     *
+     * @reff http://developer.simsimi.com/lclist
+     */
+    private $lc = "id";    
 
     /**
      * add settings for Slim Framework
@@ -103,7 +114,7 @@ class Core
 
     public function simsimi($message = "")
     {
-        $url       = 'http://sandbox.api.simsimi.com/request.p?key='.$simsimi_key.'&lc=id&ft=1.0&text='.$message;
+        $url       = 'http://sandbox.api.simsimi.com/request.p?key='.$this->$simsimi_key.'&lc='.$this->lc.'&ft=1.0&text='.$message;
         $json_data = file_get_contents($url);
         $data_msg  = json_decode($json_data,true);
         
