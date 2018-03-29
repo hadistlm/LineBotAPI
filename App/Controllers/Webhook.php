@@ -12,9 +12,9 @@ class Webhook extends Core
     /**
      * summary
      */
-    public function __construct($app, $bot, $pass_signature)
+    public function __construct($app, $bot)
     {
-    	$this->webhook($app, $bot, $pass_signature);
+    	$this->webhook($app, $bot, $this->pass_signature);
     }
 
     public function webhook($app, $bot, $pass_signature)
