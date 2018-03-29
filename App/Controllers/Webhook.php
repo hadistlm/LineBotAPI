@@ -51,88 +51,110 @@ class Webhook extends Core
             {
                 if ($event['type'] == 'message')
                 {
-                    if ($event['source']['type'] == "user") {
-                        if($event['message']['type'] == 'text'){
-                            // Send balik
-                            $user = $bot->getProfile($event['source']['userId']);
-                            $result = $bot->replyText($event['replyToken'], $event['message']['text']);
-             
-                            return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-                        }else if( ($event['message']['type'] == 'image' || $event['message']['type'] == 'video') or
-                                ($event['message']['type'] == 'audio' || $event['message']['type'] == 'file')){
-                            $basePath  = $request->getUri()->getBaseUrl();
-                            $contentURL  = $basePath."/content/".$event['message']['id'];
-                            $contentType = ucfirst($event['message']['type']);
-                            $result = $bot->replyText($event['replyToken'], $contentType. " yang Anda kirim bisa diakses dari link:\n " . $contentURL);
-                         
-                            return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-                        }   
-                    } else {
-                        if(strpos($event['message']['text'], 'Halo') !== false && !empty($event['source']['userId'])){
-                            $userId     = $event['source']['userId'];
-                            $getprofile = $bot->getProfile($userId);
-                            $profile    = $getprofile->getJSONDecodedBody();
-                            $greetings  = new TextMessageBuilder("Halo, ".$profile['displayName']);
+                    switch ($event['source']['type']) {
+                        case "user":
+                            switch ($event['message']['type']) {
+                                case "text":
+                                    // Send balik
+                                    $user = $bot->getProfile($event['source']['userId']);
+                                    $result = $bot->replyText($event['replyToken'], $event['message']['text']);
                      
-                            $result = $bot->replyMessage($event['replyToken'], $greetings);
-                            return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-                        } else {
-                            $pesan  = str_replace(" ", "%20", $event['message']['text']);
-                            $simi   = $this->simsimi( $pesan ); 
-
-                            if ((strpos($simi['response'], 'simi') !== false)) {
-                              $sending = str_replace("simi", "AusBOT", $simi['response']);   
-                            }else {
-                              $sending = $simi['response'];
-                            }
-
-                            $groupId    = $event['source']['groupId'];
-                            $userId     = $event['source']['userId'];
-                            $getprofile = $bot->getProfile($userId);
-                            $profile    = $getprofile->getJSONDecodedBody();
-                            $name       = !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
-                            $filename   = $_SERVER['DOCUMENT_ROOT']."/database/database_{$groupId}.txt";
-
-                            if (strpos($event['message']['text'], "!l") !== FALSE) {
-                                $getuser   = explode(" ", $event['message']['text']);
-                                $storeData = fopen($filename, "r");
-                                $data      = fread($storeData,filesize($filename));
-                                fclose($storeData);
-                                $explo = explode("\n", $data);
-
-                                if (empty($getuser[1])):
-                                    $sending = "Nama User Kosong.";
-                                else:
-                                    foreach ($explo as $value){
-                                        $msg = explode(" : ", $value);
-
-                                        if(strpos($value, strtolower($getuser[1]) !== FALSE)):
-                                            $sending .= '['.date_format($msg[0],"h:i").']'. $msg[1] .' : '. $msg[2] ."\n";
-                                        endif;
-                                    }
-                                endif;
+                                    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+                                break;
                                 
-                            }else {
-                                $lines      = file($filename);
-                                $last_line  = $lines[count($lines)-1];
-                                $fetch_date = explode(" : ", $last_line); 
-
-                                //Delete data when last stored data is yesterday
-                                if((time()-(60*60*24)) < strtotime($fetch_date[0])){
-                                    unlink($filename);
-                                }else {
-                                    $storeData = fopen($filename, "a");
-                                    $textStore = date("Y-m-d h:i:s").' : '.strtolower($name).' : '.$event['message']['text']."\n";
-                                    $status = fwrite($storeData, $textStore);
-                                    fclose($storeData);   
-                                }
+                                default:
+                                    $basePath    = $request->getUri()->getBaseUrl();
+                                    $contentURL  = $basePath."/content/".$event['message']['id'];
+                                    $contentType = ucfirst($event['message']['type']);
+                                    $result = $bot->replyText($event['replyToken'], $contentType. " yang Anda kirim bisa diakses dari link:\n " . $contentURL);
+                                     
+                                    return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+                                break;
                             }
+                        break;
+                        
+                        default:
+                            if(strpos($event['message']['text'], 'Halo') !== false && !empty($event['source']['userId'])){
+                                $userId     = $event['source']['userId'];
+                                $getprofile = $bot->getProfile($userId);
+                                $profile    = $getprofile->getJSONDecodedBody();
+                                $greetings  = new TextMessageBuilder("Halo, ".$profile['displayName']);
+                         
+                                $result = $bot->replyMessage($event['replyToken'], $greetings);
+                                return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+                            } else {
 
-                            $result = $bot->replyText($event['replyToken'], $sending);
-                            return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
-                        }
+                                // Simsimi replyfunction
+                                $sending  = $this->simsimiIntegration( $event );
+                                $sending .= $this->logsChat( $event );
+
+                                $result = $bot->replyText($event['replyToken'], $sending);
+                                return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
+                            }
+                        break;
                     }
                 }
+            }
+        }
+    }
+
+    public function simsimiIntegration( $event )
+    {
+        $pesan  = str_replace(" ", "%20", $event['message']['text']);
+        $simi   = $this->simsimi( $pesan ); 
+
+        if ((strpos($simi['response'], 'simi') !== false)) {
+          $sending = str_replace("simi", "AusBOT", $simi['response']);   
+        }else {
+          $sending = $simi['response'];
+        }
+
+        return $sending;
+    }
+
+    public function logsChat( $event )
+    {
+        $groupId    = $event['source']['groupId'];
+        $userId     = $event['source']['userId'];
+        $getprofile = $bot->getProfile($userId);
+        $profile    = $getprofile->getJSONDecodedBody();
+        $name       = !empty($profile['displayName']) ? $profile['displayName'] : 'Unidentified';
+        $filename   = $_SERVER['DOCUMENT_ROOT']."/database/database_{$groupId}.txt";
+
+        if (strpos($event['message']['text'], "!l") !== FALSE) {
+            $getuser   = explode(" ", $event['message']['text']);
+            $storeData = fopen($filename, "r");
+            $data      = fread($storeData,filesize($filename));
+            fclose($storeData);
+            $explo = explode("\n", $data);
+
+            if (empty($getuser[1])):
+                $sending = "Nama User Kosong.";
+            else:
+                foreach ($explo as $value){
+                    $msg = explode(" : ", $value);
+
+                    if(strpos($value, strtolower($getuser[1]) !== FALSE)):
+                        $sending .= '['.date_format($msg[0],"h:i").']'. $msg[1] .' : '. $msg[2] ."\n";
+                    endif;
+                }
+            endif;
+            
+            //return chat Logs
+            return $sending;          
+        }else {
+            $lines      = file($filename);
+            $last_line  = $lines[count($lines)-1];
+            $fetch_date = explode(" : ", $last_line); 
+
+            //Delete data when last stored data is yesterday
+            if((time()-(60*60*24)) < strtotime($fetch_date[0])){
+                unlink($filename);
+            }else {
+                $storeData = fopen($filename, "a");
+                $textStore = date("Y-m-d h:i:s").' : '.strtolower($name).' : '.$event['message']['text']."\n";
+                $status = fwrite($storeData, $textStore);
+                fclose($storeData);
             }
         }
     }
