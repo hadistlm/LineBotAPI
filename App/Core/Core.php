@@ -38,6 +38,14 @@ class Core
     private $channel_secret = "#your_channel_secret";
 
     /**
+     * Inject Channel Secret token from messaging API
+     *
+     * @param your_unique_secret
+     *
+     */
+    private $simsimi_key = "#your_simsimi_api_key";
+
+    /**
      * add settings for Slim Framework
      *
      * @param $configs
@@ -91,6 +99,15 @@ class Core
     	new \BotCore\Controllers\Profile($app, $bot);
     	new \BotCore\Controllers\Webhook($app, $bot);
     	new \BotCore\Controllers\PushMessage($app, $bot);
+    }
+
+    public function simsimi($message = "")
+    {
+        $url       = 'http://sandbox.api.simsimi.com/request.p?key='.$simsimi_key.'&lc=id&ft=1.0&text='.$message;
+        $json_data = file_get_contents($url);
+        $data_msg  = json_decode($json_data,true);
+        
+        return $data_msg;
     }
 }
 ?>

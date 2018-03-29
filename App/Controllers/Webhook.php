@@ -77,17 +77,14 @@ class Webhook extends Core
                             $result = $bot->replyMessage($event['replyToken'], $greetings);
                             return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
                         } else {
-                            //$pesan     = str_replace(" ", "%20", $event['message']['text']);
-                            //$key       = '2f8549cb-49b3-4089-9339-eecaf2fe92e6';
-                            //$url       = 'http://sandbox.api.simsimi.com/request.p?key='.$key.'&lc=id&ft=1.0&text='.$pesan;
-                            //$json_data = file_get_contents($url);
-                            //$url       = json_decode($json_data,true);
+                            $pesan  = str_replace(" ", "%20", $event['message']['text']);
+                            $simi   = $this->simsimi( $pesan ); 
 
-                            //if ((strpos($url['response'], 'simi') !== false)) {
-                            //  $fetch = str_replace("simi", "AusBOT", $url['response']);   
-                            //}else {
-                            //  $fetch = $url['response'];
-                            //}
+                            if ((strpos($simi['response'], 'simi') !== false)) {
+                              $sending = str_replace("simi", "AusBOT", $simi['response']);   
+                            }else {
+                              $sending = $simi['response'];
+                            }
 
                             $groupId    = $event['source']['groupId'];
                             $userId     = $event['source']['userId'];
