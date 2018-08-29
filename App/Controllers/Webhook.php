@@ -3,6 +3,7 @@
 namespace BotCore\Controllers;
 
 use BotCore\Core\Core;
+use BotCore\Library\SimSimiLib;
 use \LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
 use \LINE\LINEBot\MessageBuilder\TextMessageBuilder;
 use \LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
@@ -90,8 +91,9 @@ class Webhook extends Core
                                 $result = $bot->replyMessage($event['replyToken'], $greetings);
                                 return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
                             } else {
-                                // Simsimi replyfunction
-                                $sending  = $this->simsimiIntegration( $event );
+
+                                // Simsimi reply function
+                                $sending  = new SimSimiLib( $event );
                                 $sending .= $this->logsChat( $event );
 
                                 $result = $bot->replyText($event['replyToken'], $sending);

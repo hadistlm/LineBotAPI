@@ -13,6 +13,7 @@ class Core
     /**
      * signature for LINE API required
      *
+     * @param true || false
      *
      */
     protected $pass_signature = true;
@@ -39,7 +40,7 @@ class Core
      * @param your_unique_secret
      *
      */
-    private $simsimi_key = "#your_simsimi_api_key";
+    protected $simsimi_key = "#your_simsimi_api_key";
 
     /**
      * Inject simsimi language
@@ -50,7 +51,7 @@ class Core
      *
      * @reff http://developer.simsimi.com/lclist
      */
-    private $lc = "id";    
+    protected $lc = "id";    
 
     /**
      * add settings for Slim Framework
