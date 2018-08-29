@@ -104,20 +104,6 @@ class Webhook extends Core
         }
     }
 
-    public function simsimiIntegration( $event )
-    {
-        $pesan  = str_replace(" ", "%20", $event['message']['text']);
-        $simi   = $this->simsimi( $pesan ); 
-
-        if ((strpos($simi['response'], 'simi') !== false)) {
-          $sending = str_replace("simi", "AusBOT", $simi['response']);   
-        }else {
-          $sending = $simi['response'];
-        }
-
-        return $sending;
-    }
-
     public function logsChat( $event )
     {
         $groupId    = $event['source']['groupId'];

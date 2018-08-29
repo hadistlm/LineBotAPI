@@ -107,14 +107,5 @@ class Core
     	new \BotCore\Controllers\Webhook($app, $bot, $this->pass_signature);
     	new \BotCore\Controllers\PushMessage($app, $bot);
     }
-
-    public function simsimi($message = "")
-    {
-        $url       = 'http://sandbox.api.simsimi.com/request.p?key='.$this->$simsimi_key.'&lc='.$this->lc.'&ft=1.0&text='.$message;
-        $json_data = file_get_contents($url);
-        $data_msg  = json_decode($json_data,true);
-        
-        return $data_msg;
-    }
 }
 ?>
