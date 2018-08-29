@@ -81,7 +81,11 @@ class Core
 		try {
 			$this->routeList( $app, $bot );
 		} catch ( \Exception $e ) {
-			echo $e->getMessage();
+            // write to debugger log when error
+            $fp = fopen($_SERVER['DOCUMENT_ROOT']."/database/debugger.txt", 'a');
+            fwrite($fp, date('d-M-Y'));
+            fwrite($fp, " : {$e->getMessage}");
+            fclose($fp);
 		}
 
 		$app->run();

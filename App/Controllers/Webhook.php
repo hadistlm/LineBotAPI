@@ -81,7 +81,7 @@ class Webhook extends Core
                         break;
                         
                         default:
-                            if(strpos($event['message']['text'], 'Halo') !== false && !empty($event['source']['userId'])){
+                            if( strpos($event['message']['text'], 'Halo') !== false ){
                                 $userId     = $event['source']['userId'];
                                 $getprofile = $bot->getProfile($userId);
                                 $profile    = $getprofile->getJSONDecodedBody();
