@@ -24,6 +24,10 @@ class ComposerStaticInit2e3324d6c975ac3291e15a7a37c0d9b9
         array (
             'LINE\\' => 5,
         ),
+        'J' => 
+        array (
+            'Jikan\\' => 6,
+        ),
         'I' => 
         array (
             'Interop\\Container\\' => 18,
@@ -54,6 +58,10 @@ class ComposerStaticInit2e3324d6c975ac3291e15a7a37c0d9b9
         'LINE\\' => 
         array (
             0 => __DIR__ . '/..' . '/linecorp/line-bot-sdk/src',
+        ),
+        'Jikan\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/jikan-me/jikan/src',
         ),
         'Interop\\Container\\' => 
         array (

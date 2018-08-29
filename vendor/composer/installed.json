@@ -362,5 +362,42 @@
             "micro",
             "router"
         ]
+    },
+    {
+        "name": "jikan-me/jikan",
+        "version": "v1.15.9",
+        "version_normalized": "1.15.9.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/jikan-me/jikan.git",
+            "reference": "f74e4da0f60c943d979b90c2e6e06382addafdd5"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/jikan-me/jikan/zipball/f74e4da0f60c943d979b90c2e6e06382addafdd5",
+            "reference": "f74e4da0f60c943d979b90c2e6e06382addafdd5",
+            "shasum": ""
+        },
+        "time": "2018-05-13T22:15:34+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Jikan\\": [
+                    "src"
+                ]
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Irfan",
+                "email": "irfan@jikan.moe"
+            }
+        ],
+        "description": "Jikan is an unofficial MyAnimeList API"
     }
 ]

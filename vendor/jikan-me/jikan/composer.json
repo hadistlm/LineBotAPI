@@ -1,0 +1,23 @@
+{
+    "name": "jikan-me/jikan",
+    "description": "Jikan is an unofficial MyAnimeList API",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Irfan",
+            "email": "irfan@jikan.moe"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Jikan\\": [
+                "src"
+            ]
+        }
+    },
+    "require-dev": {
+    }
+}
