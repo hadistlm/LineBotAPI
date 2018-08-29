@@ -4,10 +4,6 @@ namespace BotCore\Core;
 
 use \LINE\LINEBot;
 use \LINE\LINEBot\HTTPClient\CurlHTTPClient;
-use \LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
-use \LINE\LINEBot\MessageBuilder\TextMessageBuilder;
-use \LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
-use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 
 /**
  * summary
@@ -101,7 +97,7 @@ class Core
     public function routeList( $app = NULL, $bot = NULL)
     {
     	// Check if module not loaded
-    	if ( $app == NULL || $bot = NULL) :
+    	if ( $app == NULL || $bot == NULL) :
     		throw new \Exception("Module not loaded."); 	
     	endif;
 

@@ -3,6 +3,10 @@
 namespace BotCore\Controllers;
 
 use BotCore\Core\Core;
+use \LINE\LINEBot\MessageBuilder\MultiMessageBuilder;
+use \LINE\LINEBot\MessageBuilder\TextMessageBuilder;
+use \LINE\LINEBot\MessageBuilder\StickerMessageBuilder;
+use \LINE\LINEBot\SignatureValidator as SignatureValidator;
 
 /**
  * summary
@@ -35,7 +39,7 @@ class Webhook extends Core
                 }
          
                 // is this request comes from LINE?
-                if(! SignatureValidator::validateSignature($body, $channel_secret, $signature)){
+                if(!SignatureValidator::validateSignature($body, $channel_secret, $signature)){
                     return $response->withStatus(400, 'Invalid signature');
                 }
             }
@@ -80,12 +84,12 @@ class Webhook extends Core
                                 $userId     = $event['source']['userId'];
                                 $getprofile = $bot->getProfile($userId);
                                 $profile    = $getprofile->getJSONDecodedBody();
-                                $greetings  = new TextMessageBuilder("Halo, ".$profile['displayName']);
+                                $mention    = ($profile['message'] == 'Not found') ? 'Ini AusBOT!' : $profile['displayName'];
+                                $greetings  = new TextMessageBuilder("Halo, {$mention}");
                          
                                 $result = $bot->replyMessage($event['replyToken'], $greetings);
                                 return $res->withJson($result->getJSONDecodedBody(), $result->getHTTPStatus());
                             } else {
-
                                 // Simsimi replyfunction
                                 $sending  = $this->simsimiIntegration( $event );
                                 $sending .= $this->logsChat( $event );
